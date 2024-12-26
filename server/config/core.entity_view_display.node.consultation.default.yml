@@ -1,0 +1,30 @@
+uuid: 25e65a4e-c486-4301-8272-1b1490991e46
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.consultation.field_consultation
+    - node.type.consultation
+  module:
+    - entity_reference_revisions
+    - user
+id: node.consultation.default
+targetEntityType: node
+bundle: consultation
+mode: default
+content:
+  field_consultation:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 104
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden: {  }

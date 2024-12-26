@@ -1,0 +1,47 @@
+name: mautic-lando
+recipe: lamp
+config:
+  webroot: docroot
+  php: '8.2'
+  database: mysql:5.7
+
+tooling:
+  mt:
+    service: appserver
+    description: Run Mautic commands
+    cmd: php bin/console
+  node:
+    service: appserver
+  npm:
+    service: appserver
+  # Add cron job commands
+  cron-segment-update:
+    service: appserver
+    description: "Run Mautic segment update cron job"
+    cmd: php bin/console mautic:segments:update
+  cron-campaign-update:
+    service: appserver
+    description: "Run Mautic campaign update cron job"
+    cmd: php bin/console mautic:campaigns:update
+  cron-campaign-trigger:
+    service: appserver
+    description: "Run Mautic campaign trigger cron job"
+    cmd: php bin/console mautic:campaigns:trigger
+
+proxy:
+  mailhog:
+    - mail.mautic-contrib.lndo.site
+services:
+  mailhog:
+    type: mailhog
+    portforward: true
+  appserver:
+    type: php:8.2
+    build_as_root:
+      - docker-php-ext-install sockets
+      - docker-php-ext-configure imap --with-kerberos --with-imap-ssl && docker-php-ext-install imap
+      - curl -sL https://deb.nodesource.com/setup_22.x | bash -
+      - apt-get install -y nodejs
+    xdebug: true
+    config:
+      php: .lando/php/php.ini
